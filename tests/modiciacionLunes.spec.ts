@@ -1,6 +1,6 @@
 import 'mocha';
 import {expect} from 'chai';
-import {AddReduce} from '../src/subclass';
+import {AddReduce} from '../src/modificacion/subclass';
 
 const array: AddReduce = new AddReduce([1, 2, 3]);
 
