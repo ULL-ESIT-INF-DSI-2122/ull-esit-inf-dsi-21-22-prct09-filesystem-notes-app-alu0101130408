@@ -33,7 +33,7 @@ export class Note {
     return this.color;
   }
 
-  printTitle() {
+  printTitle(): void {
     switch (this.color) {
       case 'Red':
         console.log(chalk.red(this.title));
@@ -50,7 +50,7 @@ export class Note {
     }
   }
 
-  printBody() {
+  printBody(): void {
     switch (this.color) {
       case 'Red':
         console.log(chalk.red(this.body));

@@ -2,16 +2,25 @@ import 'mocha';
 import {expect} from 'chai';
 import {Note} from '../src/note';
 
-const noteObject: Note = new Note('Hola', 'hola mundo', 'Red');
+const firstNote: Note = new Note('Primera Nota', 'Esta es la primera nota', 'Red');
 
 describe('Pruebas Unitarias de la Clase Note', ()=> {
-  it('Prueba de instancia de Note', () =>{
-    expect(noteObject).to.exist;
-    expect(noteObject).not.null;
+  it('Prueba de instancia de la clase Note', () =>{
+    expect(firstNote).to.exist;
+    expect(firstNote).not.null;
   });
-  it('Prueba de metodos de acceso', () =>{
-    expect(noteObject.geTitle()).to.be.eql('Hola');
-    expect(noteObject.getBody()).to.be.eql('hola mundo');
-    expect(noteObject.getColor()).to.be.eql('Red');
+  it('Prueba de metodos de acceso "Getters" de la clase Note', () =>{
+    expect(firstNote.geTitle()).to.be.eql('Primera Nota');
+    expect(firstNote.getBody()).to.be.eql('Esta es la primera nota');
+    expect(firstNote.getColor()).to.be.eql('Red');
+  });
+
+  it('Prueba de metodos de acceso "Setters" de la clase Note', () =>{
+    firstNote.seTitle('Nota Actualizada');
+    expect(firstNote.geTitle()).to.be.eql('Nota Actualizada');
+    firstNote.setBody('Se ha actualizado el valor de la primera nota');
+    expect(firstNote.getBody()).to.be.eql('Se ha actualizado el valor de la primera nota');
+    firstNote.setColor('Green');
+    expect(firstNote.getColor()).to.be.eql('Green');
   });
 });
