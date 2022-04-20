@@ -41,7 +41,7 @@ function main(): void {
       }
     },
   });
-
+  /*
   yargs.command({
     command: 'delete',
     describe: 'Elimina una nota del sistema',
@@ -107,6 +107,7 @@ function main(): void {
       }
     },
   });
+  */
 
   yargs.parse();
 }

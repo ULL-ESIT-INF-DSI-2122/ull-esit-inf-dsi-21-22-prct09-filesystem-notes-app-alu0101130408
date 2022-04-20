@@ -41,6 +41,6 @@
   },
   "dependencies": {
     "@types/node": "^17.0.25",
-    "lowdb": "^3.0.0"
+    "lowdb": "^1.0.0"
   }
 }

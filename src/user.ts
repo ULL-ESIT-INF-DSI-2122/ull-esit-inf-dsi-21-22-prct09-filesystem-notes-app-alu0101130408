@@ -5,10 +5,7 @@ const chalk = require('chalk');
 
 export class User {
   // constructor
-  private Notes: Note[]= [];
-  private DataBase:Bdd;
-  constructor(private userName: string ) {
-    this.DataBase = new Bdd(userName, this.Notes);
+  constructor(private userName: string, private Notes: Note[]= [], private DataBase:Bdd = new Bdd(userName, Notes)) {
   }
 
   updateUser() {
