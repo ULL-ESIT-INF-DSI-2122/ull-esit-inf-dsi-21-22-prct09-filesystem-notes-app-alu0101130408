@@ -12,6 +12,7 @@ export class Bdd {
   constructor(userName: string, Notes: Note[] = []) {
     if (fs.readdirSync("./src/database").lenght === 0) {
       this.fileName = userName + ".json";
+      // eslint-disable-next-line no-unused-vars
       const touch = spawn('touch', [this.fileName]);
       const adapter = new FileSync(`./src/database/${this.fileName}`);
       this.dataBase = low(adapter);
