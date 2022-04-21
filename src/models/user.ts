@@ -132,7 +132,7 @@ export class User {
   }
 
   /**
-   * Método encargado de mostrar toda la información de una nota dado un titulo
+   * Método encargado de mostrar toda la información de una nota dado un titulo concreto
    * @param title titulo de la nota que se desea leer
    */
   printNotes(title : string): void {
