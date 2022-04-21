@@ -16,18 +16,19 @@
   2.2. [Clase BDD.](#id22)
   2.3. [Clase User.](#id23)
   2.4. [fichero index.ts.](#id24)
+3. [Instrucciones de Uso.](#id3)
 
-3. [Dificultades.](#id3)
+4. [Dificultades.](#id4)
 
-4. [Conclusión.](#id4)
+5. [Conclusión.](#id5)
 
-5. [Referencias.](#id5)
+6. [Referencias.](#id6)
 
 <br/><br/>
 
 ## 1. Introducción y objetivos. <a name="id1"></a>
 
-El Objetivo de esta práctica es diseñar e implementar un sistema que permita añadir, eliminar, modificar, listar y leer a través de linea de comando las notas de un usuario especifico almacenadas enn un fichero. En resumen, debemos hacer uso de los módulos `chark` y `yargs` para diseñar e implementar una aplicación de procesamiento de notas de texto. 
+El Objetivo de esta práctica es diseñar e implementar un sistema que permita añadir, eliminar, modificar, listar y leer a través de linea de comando las notas de un usuario especifico almacenadas enn un fichero. En resumen, debemos hacer uso de los módulos `chark` y `yargs` para diseñar e implementar una aplicación de procesamiento de notas de texto.
 
 Como se ha mencionado se debera hacer uso de dos módulos a demás de los módulos necesarios que ya se han visto. Los módulos utilizados en este proyecto por mi parte han sido:
 * **LowDB**: Para llevar a cabo la implementación de una base de datos en un fichero *.JSON* que almacene las notas del usuario.
@@ -53,23 +54,139 @@ La estructura que se ha adoptado en este proyecto es la siguiente:
 
 A continuación vamos a explicar de forma más detallada estos ficheros que compone el proyecto:
 
-### 2.1. Clase Genero. <a name="id21"></a>
+### 2.1. Clase Note. <a name="id21"></a>
 
-Info general
+La clase `Note` es la encargada de definir una nota dentro del sistema.
 
-objeto colorNotes
+Para especificar el color que puede tener una nota, definimos un objeto que solo puede contener un color de entre todos los que se pueden implementar.
 
 ```TypeScript
-
+export type ColorNotes = 'Red' | 'Green' | 'Blue' | 'Yellow';
 ```
+Para implementar la nota definimos la estructura básica que ha de tener,es decir, el titulo de la nota (*string*), el cuerpo de la nota (*string*) y el color de la nota (*ColorNote*).
 
-clase Note
+Posteriormente se definen los métodos de acceso necesarios *Getters y Setter* para poder acceder o obtener los valores de estos atributos privados. Además de estos métodos tambien definimos por un lado **printTitle** que dependiendo del color de la nota que se introdujo a través de un string, muestra por consola a través de chark el titulo con el color que se introdujo. Por otro lado la función **printBody** realiza la misma idea pero con el cuerpo de la nota.
+
 ```TypeScript
+import chalk from "chalk";
+
+export class Note {
+
+  constructor(private title: string, private body: string, private color: ColorNotes) {
+    this.title = title;
+    this.body = body;
+    this.color = color;
+  }
+
+  geTitle(): string {
+    return this.title;
+  }
+
+  getBody(): string {
+    return this.body;
+  }
+
+  getColor(): ColorNotes {
+    return this.color;
+  }
+
+  seTitle(newTitle: string): void {
+    this.title = newTitle;
+  }
+
+  setBody(newBody: string): void {
+    this.body = newBody;
+  }
+
+  setColor(newColor: ColorNotes): void {
+    this.color = newColor;
+  }
+
+  printTitle(): void {
+    switch (this.color) {
+      case 'Red':
+        console.log(chalk.red.bold(this.title));
+        break;
+      case 'Green':
+        console.log(chalk.green.bold(this.title));
+        break;
+      case 'Blue':
+        console.log(chalk.blue.bold(this.title));
+        break;
+      case 'Yellow':
+        console.log(chalk.yellow.bold(this.title));
+        break;
+    }
+  }
+  printBody(): void {
+    switch (this.color) {
+      case 'Red':
+        console.log(chalk.red(this.body));
+        break;
+      case 'Green':
+        console.log(chalk.green(this.body));
+        break;
+      case 'Blue':
+        console.log(chalk.blue(this.body));
+        break;
+      case 'Yellow':
+        console.log(chalk.yellow(this.body));
+        break;
+    }
+  }
+};
 ```
-Test
+Para realizar las pruebas unitarias desarrolladas en la metodologia TDD sobre esta clase `Note`, se define instancian los objetos de la clase nota y se comprueban los métodos de acceso *Getters y Setters*.
 
 ```TypeScript
+import 'mocha';
+import {expect} from 'chai';
+import {Note} from '../src/Basic_class/note';
 
+const firstNote: Note = new Note('Primera Nota', 'Esta es la primera nota', 'Red');
+const secondNote: Note = new Note('Segunda Nota', 'Esta es la segunda nota', 'Yellow');
+const thirdNote: Note = new Note('Tercera Nota', 'Esta es la tercera nota', 'Green');
+const fourthNote: Note = new Note('Cuarta Nota', 'Esta es la Cuarta nota', 'Blue');
+
+describe('Pruebas Unitarias de la Clase Note', ()=> {
+  it('Prueba de instancia de la clase Note', () =>{
+    expect(firstNote).to.exist;
+    expect(firstNote).not.null;
+    expect(secondNote).to.exist;
+    expect(secondNote).not.null;
+    expect(thirdNote).to.exist;
+    expect(thirdNote).not.null;
+    expect(fourthNote).to.exist;
+    expect(fourthNote).not.null;
+  });
+  it('Prueba de metodos de acceso "Getters" de la clase Note', () =>{
+    expect(firstNote.geTitle()).to.be.eql('Primera Nota');
+    expect(secondNote.geTitle()).to.be.eql('Segunda Nota');
+    expect(thirdNote.geTitle()).to.be.eql('Tercera Nota');
+    expect(fourthNote.geTitle()).to.be.eql('Cuarta Nota');
+
+    expect(firstNote.getBody()).to.be.eql('Esta es la primera nota');
+    expect(secondNote.getBody()).to.be.eql('Esta es la segunda nota');
+    expect(thirdNote.getBody()).to.be.eql('Esta es la tercera nota');
+    expect(fourthNote.getBody()).to.be.eql('Esta es la cuarta nota');
+
+    expect(firstNote.getColor()).to.be.eql('Red');
+    expect(secondNote.getColor()).to.be.eql('Yellow');
+    expect(thirdNote.getColor()).to.be.eql('Green');
+    expect(fourthNote.getColor()).to.be.eql('Blue');
+  });
+
+  it('Prueba de metodos de acceso "Setters" de la clase Note', () =>{
+    firstNote.seTitle('Nota Actualizada');
+    expect(firstNote.geTitle()).to.be.eql('Nota Actualizada');
+
+    secondNote.setBody('Se ha actualizado el valor de la segunda nota');
+    expect(firstNote.getBody()).to.be.eql('Se ha actualizado el valor de la segunda nota');
+
+    fourthNote.setColor('Yellow');
+    expect(firstNote.getColor()).to.be.eql('Yellow');
+  });
+});
 ```
 <br/><br/>
 
@@ -133,7 +250,31 @@ Test
 ```
 <br/><br/>
 
-## 3. Dificultades. <a name="id3"></a>
+## 3. Instrucciones de Uso. <a name="id3"></a>
+Para la ejecución del programa previamente se debe compilar a través del comando `tsc` que generará la carpeta *dist* correspondiente. Posteriormente debemos ejecutar en la linea de comando alguno de los siguiente comandos:
+
+La forma de ejecución del mismo es: `node dist/index.js [action] --[parametros]
+Dentro de las acciones recogidas que se debe colocar solo una en [action] están:
+
+* `add`: Para añadir una nueva nota => esto implica que los parametros que se debe poner son: `--user="nombre"  --title="titulo" --body="informacion" --color="(Red| Green | Blue | Yellow)"` que serían los colores disponibles.
+  * ejemplo: node dist/index.js add --user"Joel" --title="titulo" --body="este es el cuerpo" --color="Red"
+
+* `delete`: Para eliminar una nota existente => los parametros que se debe poner son: `--user="nombre"  --title="titulo de la nota a eliminar"`.
+  * ejemplo: node dist/index.js delete --user"Joel" --title="titulo"
+
+* `modify`: Para modificar el cuerpo de una nota existente => los parametros que se deben de poner son : `--user="nombre" --title="titulo de la nota a modificar" --body="Nuevo cuerpo que se desea introducir" `.
+  * ejemplo: node dist/index.js modify --user"Joel" --title="titulo" --body="este es el nuevo cuerpo modificado"
+
+* `changeColor`: Para modificar el color de una nota existente => los parametros que se deben de poner son : `--user="nombre" --title="titulo de la nota a modificar" --color="Nuevo color que se desea cambiar y debe de estar dentro del sistema" `.
+  * ejemplo: node dist/index.js changeColor --user"Joel" --title="titulo" --color="Green"
+
+* `list`: Para listar todas las notas de un usuario especifico => los parametros que se deben de poner son : `--user="nombre del usuario que se quiere listar" `.
+  * ejemplo: node dist/index.js list --user"Joel"
+
+* `read`: Para leer una nota en concreto de un usuario especifico => los parametros que se deben de poner son : `--user="nombre" --title="titulo de la nota que se desea leer" `.
+  * ejemplo: node dist/index.js read --user"Joel" --title="titulo".
+
+## 4. Dificultades. <a name="id4"></a>
 
 Dentro de las dificultades encontradas dentro de esta práctica, me gustaría resaltar:
 
@@ -158,13 +299,13 @@ TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts" for /home/u
     at async singleRun (/home/usuario/ull-esit-inf-dsi-21-22-prct09-filesystem-notes-app-alu0101130408/node_modules/mocha/lib/cli/run-helpers.js:125:3)
     at async Object.exports.handler (/home/usuario/ull-esit-inf-dsi-21-22-prct09-filesystem-notes-app-alu0101130408/node_modules/mocha/lib/cli/run.js:374:5)
 ```
-## 4. Conclusión. <a name="id4"></a>
+## 5. Conclusión. <a name="id5"></a>
 
 Los objetivos que se han propuesto y se han cumplido son:
 * 
 * 
 
-## 5. Referencias. <a name="id5"></a>
+## 6. Referencias. <a name="id6"></a>
 1. [Github](http://github.com)
 2. [Repositorio de la Pŕactica](https://github.com/ULL-ESIT-INF-DSI-2122/ull-esit-inf-dsi-21-22-prct07-music-datamodel-grupo-m.git)
 3. [Guión de la Pŕactica 7](https://ull-esit-inf-dsi-2122.github.io/prct07-music-dataModel/)

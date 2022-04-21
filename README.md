@@ -12,9 +12,17 @@ El Objetivo de esta práctica es diseñar e implementar un sistema que permita a
 Especificamente la forma de ejecución del mismo es: `node dist/index.js [action] --[parametros]
 Dentro de las acciones recogidas que se debe colocar solo una en [action] están:
 
-* `add`: Para añadir una nueva nota => esto implica que los parametros que se debe poner son: `--user="name"  --title="titulo" --body="informacion" --color="(Red| Green | Blue | Yellow)"` que serían los colores disponibles.
+* `add`: Para añadir una nueva nota => esto implica que los parametros que se debe poner son: `--user="nombre"  --title="titulo" --body="informacion" --color="(Red| Green | Blue | Yellow)"` que serían los colores disponibles.
 
-* `delete`: Para eliminar una nota existente => los parametros que se debe poner son: `--user="name"  --title="titulo de la nota a elimianr"`.
+* `delete`: Para eliminar una nota existente => los parametros que se debe poner son: `--user="nombre"  --title="titulo de la nota a eliminar"`.
+
+* `modify`: Para modificar el cuerpo de una nota existente => los parametros que se deben de poner son : `--user="nombre" --title="titulo de la nota a modificar" --body="Nuevo cuerpo que se desea introducir" `.
+
+* `changeColor`: Para modificar el color de una nota existente => los parametros que se deben de poner son : `--user="nombre" --title="titulo de la nota a modificar" --color="Nuevo color que se desea cambiar y debe de estar dentro del sistema" `.
+
+* `list`: Para listar todas las notas de un usuario especifico => los parametros que se deben de poner son : `--user="nombre del usuario que se quiere listar" `.
+
+* `read`: Para leer una nota en concreto de un usuario especifico => los parametros que se deben de poner son : `--user="nombre" --title="titulo de la nota que se desea leer" `.
 
 > Para acceder al informe de la práctica 9 piche [aquí]()
 
