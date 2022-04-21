@@ -16,6 +16,7 @@
   2.2. [Clase BDD.](#id22)
   2.3. [Clase User.](#id23)
   2.4. [fichero index.ts.](#id24)
+
 3. [Instrucciones de Uso.](#id3)
 
 4. [Dificultades.](#id4)
@@ -192,62 +193,455 @@ describe('Pruebas Unitarias de la Clase Note', ()=> {
 
 ### 2.2. Clase Bdd. <a name="id22"></a>
 
-Info general
+Esta es la clase encargada de definir a través de (lowDB)[] la base de datos que haŕa uso el sistema en los ficheros de la carpeta *src/database/*.
 
-objeto colorNotes
+Para implementar esta clase de forma privada definimos la base de datos (*database*) y el nombre del fichero (*filename*) posteriormente en el constructor definimos el nombre del usuario en el sistema y un array de notas inicialmente vacio, que será el esquema que seguirá nuestra base de datos. En las siguientes líneas se lee los ficheros que hay dentro de la carpeta */src/database* y en caso de que no exista se crea un nuevo fichero con el nombre de usuario más la extensión "**.JSON**" y se guarda en el directorio este fichero inicializado. En caso de que se encuentre un fichero ya creado con ese nombre simplemente se inicializa en el fichero la información. Posteriormente analizamos si el usuario se encuentra en la base de datos , si no está dentro de la base de datos se llama a la función *addUser* que se encargará de añadir al usuario en caso de que si se encuentre el usuario en la base de datos introducimos en el vector de notas del usuario todas las notas y el id correspondiente.
+
+El método **addUser** recibe el nombre del usuario por parametro y lo que hace es a través del método write para escribir en la base de datos crear un usuario con un nombre y un id aleatorio generado en la funcion getRandomArbitrary.
+
+el método **getRandomArbitrary** recibe un valor minimo y uno maximo y entre ese rango genera un numero aleatorio y lo trunca para quedarse con el valor entero, que será más tarde asignado al ID del usuario.
+
+el método **updateBbb** se encara de borrar todas las notas y la informacion actual de un usuario y añadir la nueva información de forma que se actualiza la base de datos para un usuario especifico.
 
 ```TypeScript
+const low = require('lowdb');
+const fs = require('fs');
+import {spawn} from 'child_process';
+const FileSync = require('lowdb/adapters/FileSync');
+import {Note} from '../Basic_class/note';
+
+export class Bdd {
+  private dataBase: any;
+  private fileName: string = '';
+
+  constructor(userName: string, Notes: Note[] = []) {
+    if (fs.readdirSync("./src/database").lenght === 0) {
+      this.fileName = userName + ".json";
+      // eslint-disable-next-line no-unused-vars
+      const touch = spawn('touch', [this.fileName]);
+      const adapter = new FileSync(`./src/database/${this.fileName}`);
+      this.dataBase = low(adapter);
+    } else {
+      this.fileName = userName + ".json";
+      const adapter = new FileSync(`./src/database/${this.fileName}`);
+      this.dataBase = low(adapter);
+    }
+
+    if (!this.dataBase.get('User').find({name: userName}).value()) {
+      this.addUser(userName);
+    } else {
+      const size: number = this.dataBase.get('User').find({name: userName}).get('notes').size().value();
+      for (let i: number = 0; i < size; i++) {
+        Notes.push(new Note(this.dataBase.get('User').find({name: userName}).get(`notes[${i}].title`).value(), this.dataBase.get('User').find({name: userName}).get(`notes[${i}].body`).value(), this.dataBase.get('User').find({name: userName}).get(`notes[${i}].color`).value()));
+      }
+    }
+  }
+
+  addUser(name: string) {
+    this.dataBase.defaults({User: []}).write();
+    this.dataBase.get('User').push({name: name, notes: [], id: this.getRandomArbitrary(100, 1)}). write();
+  }
+
+  getRandomArbitrary(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+  
+  updateDbb(userName: string, Notes: Note[]) {
+    this.dataBase.get('User').find({name: userName}).get("notes").remove().write();
+    Notes.forEach((item) => {
+      this.dataBase.get('User').find({name: userName}).get('notes').push({title: item.geTitle(), body: item.getBody(), color: item.getColor()}).write();
+    });
+  }
+}
 
 ```
 
-clase Note
-```TypeScript
-```
-Test
-
-```TypeScript
-
-```
 <br/><br/>
 
 ### 2.3. Clase User. <a name="id23"></a>
 
-Info general
+Esta es la clase `User` encargado de definir a un usuario dentro de la base de datos y las diferentes operaciones que puede realizar el usuario.
 
-objeto colorNotes
+Para implementar esta clase dentro del constructor inicializamos el nombre del usuario (*string*), un array de notas que serán todas las notas que tiene un usuario dentro de la base de datos (*Notes[]*), una instancia de la base de datos a los que se le pasa el nombre del usuario y las notas. de esta forma logramos una base de datos propia por cada usuario.
+
+Dentro de los métodos tenemos por un lado los métodos encargados de actualizar un usuario **updateUser** y un método **exist** que comprueba si existe una nota dentro de la base de datos. Para ello declaramos un flag que comprueba si se ha encontrado una nota o no y para cada nota dentro del vector de notas si se encuentra el titulo con el titulo que se le pasa como parametro entonces guardamos la nota y ponemos el flag a true en caso negativo se muestra un mensaje por consola de que no se encuentra en el sistema.
+
+Por otro lado, definimos los métodos que se encargarán de definir las posibles operaciones basicas que hará el usuario:
+Para añadir el método **addnote** comrpueba que la nota existe si no existe la nota, es decir, es false la comprobacion entonces se crea una nueva nota con los parametros necesarios que se pasan al metodo el flag de creacion se pone a true y se muestra el mensaje en caso de que si exista la nota entonces se muestra un mensaje de que no se ha podido crear el objeto puesto que ya existe. Luego esta el método encargado de eliminar una nota **deleteNote** el cual recibe la nota a eliminar y comprueba a traves de exist que existe la nota en caso de existir se elimina a través de la funcion proporcionada por typescript splice sustituyendo el indice de esta nota por uno. 
+
+Para la modificación se han llevado a cabo dos métodos: **modifyNote** que se encarga de recibir el titulo de la nota que se desea modificar y el nuevo cuerpo que se quiere introducir a la nota, entonces se busca la nota y se saca su indice y posteriormente establecemos con el setter adecuado el nuevo cuerpo a la nota. Por otro lado, también se puede modifica el color de la nota a través del método **modifyNoteColor** que recibe el titulo y el color nuevo a modificar entonces buscamos el titulo de la nota que se quiere modificar dentro de la base de datos y si se encuentra entonces se establece el nuevo color que se quiere actualizar con el setter adecuado.  
+
+Para navegar dentro del sistema se hace uso del método **printTitles** que recorre las notas de un usuario especifico y va mostrando sus titulos listando todas las notas que tiene el usuario, otra forma de navegación es el método **printBody** que se encarga de recibir el titulo de una nota y buscarla a través de exist dentro de la base de datos del usuario y en caso de encontrar muestra el titulo y cuerpo de la nota. 
 
 ```TypeScript
+import {Note, ColorNotes} from './note';
+import {Bdd} from '../system/bdd';
+
+const chalk = require('chalk');
+
+export class User {
+
+  constructor(private userName: string, private Notes: Note[]= [], private DataBase:Bdd = new Bdd(userName, Notes)) {
+  }
+
+  updateUser():void {
+    this.DataBase.updateDbb(this.userName, this.Notes);
+  }
+
+  exist(title: string): [boolean, Note] {
+    let found: boolean = false;
+    let foundNote:Note = new Note('-', '-', 'Red');
+    this.Notes.forEach((item) => {
+      if (item.geTitle() === title) {
+        found = true;
+        foundNote = item;
+      }else {
+        found = false;
+        console.log(chalk.red.bold.inverse('No existe el nombre'));
+      }
+    });
+    return [found, foundNote];
+  }
+
+  addNote(title: string, body: string, Color: ColorNotes): boolean {
+    let finish: boolean = false;
+    const check: [boolean, Note] = this.exist(title);
+    if (!check[0]) {
+      this.Notes.push(new Note(title, body, Color));
+      finish = true;
+      console.log(chalk.blue.bold.inverse('Se ha añadido la nueva nota'));
+    } else {
+      console.log(chalk.red.bold.inverse('Ya existe una nota igual'));
+    }
+    return finish;
+  }
+
+  modifyNote(title: string, bodyToModify: string): boolean {
+    let finish: boolean = false;
+    const check: [boolean, Note] = this.exist(title);
+    if (check[0]) {
+      const index = this.Notes.indexOf(check[1]);
+      this.Notes[index].setBody(bodyToModify);
+      finish = true;
+      console.log(chalk.blue.bold.inverse('Se ha modificado el cuerpo de la nota'));
+    } else {
+      console.log(chalk.red.bold.inverse('No existe la nota a modificar'));
+    }
+    return finish;
+  }
+
+  modifyNoteColor(title: string, colorToModify: ColorNotes): boolean {
+    let finish: boolean = false;
+    const check: [boolean, Note] = this.exist(title);
+    if (check[0]) {
+      const index = this.Notes.indexOf(check[1]);
+      this.Notes[index].setColor(colorToModify);
+      finish = true;
+      console.log(chalk.blue.bold.inverse('Se ha modificado el color de la nota'));
+    } else {
+      console.log(chalk.red.bold.inverse('No existe la nota a modificar'));
+    }
+    return finish;
+  }
+
+  deleteNote(title: string): boolean {
+    let finish: boolean = false;
+    const check: [boolean, Note] = this.exist(title);
+    if (check[0]) {
+      const index = this.Notes.indexOf(check[1]);
+      if (index > -1) {
+        this.Notes.splice(index, 1);
+        finish = true;
+        console.log(chalk.blue.bold.inverse(`Se ha eliminado la nota con titulo ${title}`));
+      }
+    } else {
+      console.log(chalk.red.bold.inverse('Ha introducido mal el titulo o no existe la nota con ese titulo'));
+    }
+    return finish;
+  }
+
+  printTitles(): void {
+    console.log(">> Notas de " + this.userName + ":");
+    this.Notes.forEach((item) => {
+      item.printTitle();
+    });
+  }
+
+  printNotes(title : string): void {
+    const check: [boolean, Note] = this.exist(title);
+    if (check[0]) {
+      console.log(`────────────────────────────────`);
+      check[1].printTitle();
+      check[1].printBody();
+      console.log(`────────────────────────────────`);
+    } else {
+      console.log(chalk.red.bold.inverse('Ha introducido mal el titulo o no existe la nota con ese titulo'));
+    }
+  }
+}
 
 ```
-
-clase Note
-```TypeScript
-```
-Test
+Para las pruebas unitarias de esta clase lo que se hace es declarar tres usuarios diferentes y comprobar sus instancias, posteriormente comprobamos las operaciones basicas añadir, eliminar, modificar y navegar del sistema a través de los métodos explicados anteriormente.
 
 ```TypeScript
+import 'mocha';
+import {expect} from 'chai';
+import {User} from '../src/Basic_class/user';
 
+describe('Pruebas Unitarias de la clase User', () => {
+  const usuario1: User = new User("Joel");
+  const usuario2: User = new User("Manolo");
+  const usuario3: User = new User("Pepito");
+
+  it("Test de instancia de la clase User", () => {
+    expect(usuario1).exist;
+    expect(usuario1).not.null;
+    expect(usuario2).exist;
+    expect(usuario2).not.null;
+    expect(usuario3).exist;
+    expect(usuario3).not.null;
+  });
+
+  it("Test de añadir una nota a un usuario", () => {
+    expect(usuario1.addNote('Nota Joel', 'Esta es la nota de las tareas de Joel', 'Red')).to.be.eql(true);
+    expect(usuario1.addNote('Nota Joel numero 2', 'Esta es la segunda nota de Joel', 'Green')).to.be.eql(true);
+    expect(usuario2.addNote('Nota Manolo', 'Esta es la nota de las tareas de Manolo', 'Blue')).to.be.eql(true);
+    expect(usuario2.addNote('Nota Manolo numero 2', 'Esta es la segunda nota de Manolo', 'Red')).to.be.eql(true);
+    expect(usuario3.addNote('Nota Pepito', 'Esta es la nota de las tareas de Pepito', 'Yellow')).to.be.eql(true);
+    expect(usuario3.addNote('Nota Pepito numero 2', 'Esta es la segunda nota de Pepito', 'Yellow')).to.be.eql(true);
+  });
+
+  it("Test que añade una nota ya existente", () => {
+    expect(usuario1.addNote('Nota Joel', 'Esta es la nota de las tareas de Joel', 'Red')).to.be.eql(false);
+    expect(usuario2.addNote('Nota Manolo', 'Esta es la nota de las tareas de Manolo', 'Blue')).to.be.eql(false);
+    expect(usuario3.addNote('Nota Pepito', 'Esta es la nota de las tareas de Pepito', 'Yellow')).to.be.eql(false);
+  });
+
+  it("Test de eliminar una nota de un usuario", () => {
+    expect(usuario1.deleteNote('Nota Joel numero 2')).to.be.eql(true);
+    expect(usuario2.deleteNote('Nota Manolo numero 2')).to.be.eql(true);
+    expect(usuario3.deleteNote('Nota Pepito numero 2')).to.be.eql(true);
+  });
+
+  it("Test de modificacion del cuerpo de las notas de diferentes usuarios", () => {
+    expect(usuario1.modifyNote("Nota Joel", "Ahora esta nota ha sido modificada")).to.eql(true);
+    expect(usuario2.modifyNote("Nota Manolo", "Cuerpo de la nota de manolo nuevo")).to.eql(true);
+    expect(usuario3.modifyNote("Nota Pepito", "El cuerpo será nuevo tambien en la nota de pepito")).to.eql(true);
+  });
+});
 ```
 <br/><br/>
 
 ### 2.4. Fichero index.ts. <a name="id24"></a>
 
-Info general
+En este fichero se especifican dos funciones, la función main que implementa el funcionamiento principal del sistema y la función colorGetter el cual es usado dentro de la funcion principal para gestionar los colores de chark.
 
-objeto colorNotes
+* `Función Main`:
 
 ```TypeScript
+import * as yargs from 'yargs';
+import {ColorNotes} from './Basic_class/note';
+import {User} from './Basic_class/user';
+
+function main(): void {
+
+  yargs.command({
+    command: 'add',
+    describe: 'Añadir una nueva nota al sistema',
+    builder: {
+      user: {
+        describe: 'Usuario',
+        demandOption: true,
+        type: 'string',
+      },
+      title: {
+        describe: 'Titulo',
+        demandOption: true,
+        type: 'string',
+      },
+      body: {
+        describe: 'Cuerpo',
+        demandOption: true,
+        type: 'string',
+      },
+      color: {
+        describe: 'Color',
+        demandOption: true,
+        type: 'string',
+      },
+
+    },
+    handler(argv) {
+      if (typeof argv.user === 'string' && typeof argv.title === 'string' && typeof argv.body === 'string' && typeof argv.color === 'string') {
+        const usuario: User = new User(argv.user);
+        const color: ColorNotes = colorGetter(argv.color);
+        if (usuario.addNote(argv.title, argv.body, color)) {
+          usuario.updateUser();
+        }
+      }
+    },
+  });
+
+  yargs.command({
+    command: 'modify',
+    describe: 'Modificar del cuerpo de nota del sistema',
+    builder: {
+      user: {
+        describe: 'Usuario',
+        demandOption: true,
+        type: 'string',
+      },
+      title: {
+        describe: 'Titulo',
+        demandOption: true,
+        type: 'string',
+      },
+      body: {
+        describe: 'Cuerpo',
+        demandOption: true,
+        type: 'string',
+      },
+    },
+    handler(argv) {
+      if (typeof argv.user === 'string' && typeof argv.title === 'string' && typeof argv.body === 'string') {
+        const usuario: User = new User(argv.user);
+
+        if (usuario.modifyNote(argv.title, argv.body)) {
+          usuario.updateUser();
+        }
+      }
+    },
+  });
+
+  yargs.command({
+    command: 'delete',
+    describe: 'Elimina una nota del sistema',
+    builder: {
+      user: {
+        describe: 'Usuario',
+        demandOption: true,
+        type: 'string',
+      },
+      title: {
+        describe: 'Titulo',
+        demandOption: true,
+        type: 'string',
+      },
+    },
+    handler(argv) {
+      if (typeof argv.user === 'string' && typeof argv.title === 'string') {
+        const usuario: User = new User(argv.user);
+        if (usuario.deleteNote(argv.title)) {
+          usuario.updateUser();
+        }
+      }
+    },
+  });
+
+  yargs.command({
+    command: 'changeColor',
+    describe: 'cambiar el color de una nota del sistema',
+    builder: {
+      user: {
+        describe: 'Usuario',
+        demandOption: true,
+        type: 'string',
+      },
+      title: {
+        describe: 'Titulo',
+        demandOption: true,
+        type: 'string',
+      },
+      color: {
+        describe: 'Color',
+        demandOption: true,
+        type: 'string',
+      },
+    },
+    handler(argv) {
+      if (typeof argv.user === 'string' && typeof argv.title === 'string' && typeof argv.color === 'string') {
+        const usuario: User = new User(argv.user);
+        const color: ColorNotes = colorGetter(argv.color);
+        if (usuario.modifyNoteColor(argv.title, color)) {
+          usuario.updateUser();
+        }
+      }
+    },
+  });
+
+  yargs.command({
+    command: 'read',
+    describe: 'Lee una nota del sistema',
+    builder: {
+      user: {
+        describe: 'Usuario',
+        demandOption: true,
+        type: 'string',
+      },
+      title: {
+        describe: 'Titulo',
+        demandOption: true,
+        type: 'string',
+      },
+    },
+    handler(argv) {
+      if (typeof argv.user === 'string' && typeof argv.title === 'string') {
+        const usuario: User = new User(argv.user);
+        usuario.printNotes(argv.title);
+      }
+    },
+  });
+
+  yargs.command({
+    command: 'list',
+    describe: 'Lista las notas del usuario',
+    builder: {
+      user: {
+        describe: 'Usuario',
+        demandOption: true,
+        type: 'string',
+      },
+    },
+    handler(argv) {
+      if (typeof argv.user === 'string') {
+        const usuario: User = new User(argv.user);
+        usuario.printTitles();
+      }
+    },
+  });
+
+  yargs.parse();
+}
 
 ```
 
-clase Note
-```TypeScript
-```
-Test
-
+* `Funcion ColorGetter`:
 ```TypeScript
 
+function colorGetter(colorName: string): ColorNotes {
+  let formatColor: ColorNotes = "Green";
+  switch (colorName) {
+    case "Blue":
+      formatColor = "Blue";
+      break;
+    case "Red":
+      formatColor = "Red";
+      break;
+    case "Yellow":
+      formatColor = "Yellow";
+      break;
+    case "Green":
+      formatColor = "Green";
+      break;
+    default:
+      console.log("Color no valido, asigado Verde como predeterminado");
+      break;
+  }
+  return formatColor;
+}
+
 ```
+
 <br/><br/>
 
 ## 3. Instrucciones de Uso. <a name="id3"></a>

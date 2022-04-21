@@ -7,6 +7,11 @@
           "title": "Tareas",
           "body": "estas son mis tareas",
           "color": "Yellow"
+        },
+        {
+          "title": "prueba 1",
+          "body": "esto es una prueba",
+          "color": "Blue"
         }
       ],
       "id": 34
