@@ -7,6 +7,15 @@
 
 ## Introducción:
 
+El Objetivo de esta práctica es diseñar e implementar un sistema que permita añadir, eliminar, modificar, listar y leer a través de linea de comando las notas de un usuario especifico almacenadas enn un fichero. En resumen, debemos hacer uso de los módulos `chark` y `yargs` para diseñar e implementar una aplicación de procesamiento de notas de texto. 
+
+Especificamente la forma de ejecución del mismo es: `node dist/index.js [action] --[parametros]
+Dentro de las acciones recogidas que se debe colocar solo una en [action] están:
+
+* `add`: Para añadir una nueva nota => esto implica que los parametros que se debe poner son: `--user="name"  --title="titulo" --body="informacion" --color="(Red| Green | Blue | Yellow)"` que serían los colores disponibles.
+
+* `delete`: Para eliminar una nota existente => los parametros que se debe poner son: `--user="name"  --title="titulo de la nota a elimianr"`.
+
 > Para acceder al informe de la práctica 9 piche [aquí]()
 
 > Para acceder al informe a través de Github Pages, pinche [aquí]() u acceda al siguiente enlace:

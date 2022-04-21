@@ -1,6 +1,6 @@
 import 'mocha';
 import {expect} from 'chai';
-import {User} from '../src/models/user';
+import {User} from '../src/Basic_class/user';
 
 describe('Pruebas Unitarias de la clase User', () => {
   const usuario1: User = new User("Joel");

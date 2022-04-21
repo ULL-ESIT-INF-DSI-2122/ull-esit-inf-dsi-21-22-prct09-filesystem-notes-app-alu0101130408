@@ -1,7 +1,7 @@
 import * as yargs from 'yargs';
 
-import {ColorNotes} from './models/note';
-import {User} from './models/user';
+import {ColorNotes} from './Basic_class/note';
+import {User} from './Basic_class/user';
 
 /**
  * Función principal encargada de analizar lo que el usuario pasa a través de yargs y ejecuta una de la operaciones.

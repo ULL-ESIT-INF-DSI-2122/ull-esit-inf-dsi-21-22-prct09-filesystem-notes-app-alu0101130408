@@ -3,7 +3,7 @@ const fs = require('fs');
 import {spawn} from 'child_process';
 const FileSync = require('lowdb/adapters/FileSync');
 
-import {Note} from '../models/note';
+import {Note} from '../Basic_class/note';
 
 /**
  * Clase encargada de definir la Base de datos donde se almacenará tanto los usuarios como sus notas.
@@ -47,7 +47,17 @@ export class Bdd {
    */
   addUser(name: string) {
     this.dataBase.defaults({User: []}).write();
-    this.dataBase.get('User').push({name: name, notes: [], id: Math.floor(Math.random() * (1000 - 1) + 1)}). write();
+    this.dataBase.get('User').push({name: name, notes: [], id: this.getRandomArbitrary(100, 1)}). write();
+  }
+
+  /**
+   * método que genera aleatoriamente un numero entre dos rangos
+   * @param min valor del rango minimo
+   * @param max valor del rango maximo
+   * @returns devuelve un aleatorio generado entre estos rangos que sera asociado al ID del usuario
+   */
+  getRandomArbitrary(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min) + min);
   }
 
   /**
