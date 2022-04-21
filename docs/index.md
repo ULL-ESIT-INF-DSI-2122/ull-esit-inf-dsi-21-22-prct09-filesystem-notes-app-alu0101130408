@@ -309,7 +309,7 @@ export class User {
     if (!check[0]) {
       this.Notes.push(new Note(title, body, Color));
       finish = true;
-      console.log(chalk.blue.bold.inverse('Se ha añadido la nueva nota'));
+      console.log(chalk.green.bold.inverse('Se ha añadido la nueva nota'));
     } else {
       console.log(chalk.red.bold.inverse('Ya existe una nota igual'));
     }
@@ -323,7 +323,7 @@ export class User {
       const index = this.Notes.indexOf(check[1]);
       this.Notes[index].setBody(bodyToModify);
       finish = true;
-      console.log(chalk.blue.bold.inverse('Se ha modificado el cuerpo de la nota'));
+      console.log(chalk.green.bold.inverse('Se ha modificado el cuerpo de la nota'));
     } else {
       console.log(chalk.red.bold.inverse('No existe la nota a modificar'));
     }
@@ -337,7 +337,7 @@ export class User {
       const index = this.Notes.indexOf(check[1]);
       this.Notes[index].setColor(colorToModify);
       finish = true;
-      console.log(chalk.blue.bold.inverse('Se ha modificado el color de la nota'));
+      console.log(chalk.green.bold.inverse('Se ha modificado el color de la nota'));
     } else {
       console.log(chalk.red.bold.inverse('No existe la nota a modificar'));
     }
@@ -352,7 +352,7 @@ export class User {
       if (index > -1) {
         this.Notes.splice(index, 1);
         finish = true;
-        console.log(chalk.blue.bold.inverse(`Se ha eliminado la nota con titulo ${title}`));
+        console.log(chalk.green.bold.inverse(`Se ha eliminado la nota con titulo ${title}`));
       }
     } else {
       console.log(chalk.red.bold.inverse('Ha introducido mal el titulo o no existe la nota con ese titulo'));
@@ -437,6 +437,11 @@ describe('Pruebas Unitarias de la clase User', () => {
 En este fichero se especifican dos funciones, la función main que implementa el funcionamiento principal del sistema y la función colorGetter el cual es usado dentro de la funcion principal para gestionar los colores de chark.
 
 * `Función Main`:
+
+En esta función implementa diversos **yargs** para hacer uso de este módulo proporcionado debemos seguir la estructura utilizada. Primero especificamos el nombre del comando que se debe introducir ademñas hacemos que se solicite un valor de tipo string a travś de la opcion *demandOption* y de este forma dentro de un array de yargs.command se solicitan los diversos elementos necesarios para realizar una opción. Una vez introducido a través de la sentencia*handler(argv)* realizamos la acción oportuna, en caso del comando de añadir, se comprueba de que todos los valores introducidos sean de tipo string, es decir, cadenas de caracteres y se crea un nuevo usuario con el nombre especificado por linea de comando, tambien un nuevo color a través de la funcion colorGetter  y en caso de que al añadir una nueva nota para ese usuario el flag sea true (que no haya habido problemas) entonces actualizamos la base de datos a través de la función adecuada. De esta forma operamos para los diferentes comandos de las diferentes operaciones.
+
+En el caso de eliminar, se recoge por linea de comando el usuario y el titulo y si los tipos de los valores pasados son los correctos entonces si se ha eliminado a través del método **deleteNote** y no ha dado problemas se actualiza la base de datos. De esta forma también se implementa modificar el cuerpo, modificar el color, listar todas las notas de un usuario y leer la nota de un usuario.
+
 
 ```TypeScript
 import * as yargs from 'yargs';
@@ -616,6 +621,9 @@ function main(): void {
 ```
 
 * `Funcion ColorGetter`:
+
+Esta función es utilizada para transformar el string que se pasa a través de linea de comando que define el color del usuario a un color válido recogido en el sistema, esto es que sea de tipo "string" a tipo "ColorNote". Para ello pasamos el color en tipo string y analizamos el string en caso de ser uno de los cuatro colores recogidos en el sistema se declara una variable que sera la que alamacenara el cambio y en caso de ser por ejemplo blue se le asocia el color azul y posteriormente se devuelve. de esta forma logramos realizar el paso de color.
+
 ```TypeScript
 
 function colorGetter(colorName: string): ColorNotes {
@@ -693,21 +701,37 @@ TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts" for /home/u
     at async singleRun (/home/usuario/ull-esit-inf-dsi-21-22-prct09-filesystem-notes-app-alu0101130408/node_modules/mocha/lib/cli/run-helpers.js:125:3)
     at async Object.exports.handler (/home/usuario/ull-esit-inf-dsi-21-22-prct09-filesystem-notes-app-alu0101130408/node_modules/mocha/lib/cli/run.js:374:5)
 ```
+
+* Otro error que se ha encontrado es con la calidad del codigo a través de Sonar-Cloud.
+
 ## 5. Conclusión. <a name="id5"></a>
 
 Los objetivos que se han propuesto y se han cumplido son:
-* 
-* 
+
+* Que la aplicación permita que varios usuarios interactuen con ella pero no simultaneamente.
+* La nota esta formada por titulo, cuerpo y color.
+* cada usuario tendrá su propia lista de notas
+* cada usuario podrá añadir, eliminar, modificar, listar o leer cualquier nota dentro de sus lista de nota.
+* Todos los mensajes informativos se deben mostrar de color verde excepto los de error que se deberan mostrar de color rojo
+* los cambios que se realizen deberán ser persistentes es decir que no se borren.
+* un usuario solo puede interactuar con la aplicacion a través de linea de comando.
+
+De esta forma se ha realizado todos estos objetivos a través del uso de clases, y de diversos modulos que aportan funcionalidad como lowdb, chark y yargs.
 
 ## 6. Referencias. <a name="id6"></a>
 1. [Github](http://github.com)
-2. [Repositorio de la Pŕactica](https://github.com/ULL-ESIT-INF-DSI-2122/ull-esit-inf-dsi-21-22-prct07-music-datamodel-grupo-m.git)
-3. [Guión de la Pŕactica 7](https://ull-esit-inf-dsi-2122.github.io/prct07-music-dataModel/)
+2. [Repositorio de la Pŕactica](https://github.com/ULL-ESIT-INF-DSI-2122/ull-esit-inf-dsi-21-22-prct09-filesystem-notes-app-alu0101130408.git)
+3. [Guión de la Pŕactica 9](https://ull-esit-inf-dsi-2122.github.io/prct09-filesystem-notes-app/)
 4. [Documentación GitHub Actions](https://docs.github.com/en/actions)
 5. [Documentación Istanbul](https://istanbul.js.org/)
 6. [Documentación Coveralls](https://coveralls.io/)
 7. [Documentación de TypeDoc.](https://typedoc.org/)
 8. [Documentación de Mocha.](https://mochajs.org/)
 9. [Documentación de Chai.](https://www.chaijs.com/)
-10. [Documentacion sobre el modulo Inquirer](https://www.npmjs.com/package/inquirer)
-11. [Documentacion sobre el modulo LowDB](https://www.npmjs.com/package/lowdb)
+10. [Documentacion sobre el modulo LowDB](https://www.npmjs.com/package/lowdb)
+11. [Documentacion sobre el modulo Yargs](https://www.npmjs.com/package/yargs)
+12. [Documentacion sobre el modulo Chark](https://www.npmjs.com/package/chalk)
+13. [Documentacion sobre el uso de filesystem de node.js](https://nodejs.org/dist/latest-v17.x/docs/api/fs.html#synchronous-api)
+14. [Documentacion de child process](https://nodejs.org/api/child_process.html)
+15. [Documentacion de la libreria Math](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Math/random)
+16. [Documentacion sobre el uso de fylesync](https://www.geeksforgeeks.org/node-js-fs-readdirsync-method/)

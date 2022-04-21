@@ -53,7 +53,7 @@ export class User {
     if (!check[0]) {
       this.Notes.push(new Note(title, body, Color));
       finish = true;
-      console.log(chalk.blue.bold.inverse('Se ha añadido la nueva nota'));
+      console.log(chalk.green.bold.inverse('Se ha añadido la nueva nota'));
     } else {
       console.log(chalk.red.bold.inverse('Ya existe una nota igual'));
     }
@@ -73,7 +73,7 @@ export class User {
       const index = this.Notes.indexOf(check[1]);
       this.Notes[index].setBody(bodyToModify);
       finish = true;
-      console.log(chalk.blue.bold.inverse('Se ha modificado el cuerpo de la nota'));
+      console.log(chalk.green.bold.inverse('Se ha modificado el cuerpo de la nota'));
     } else {
       console.log(chalk.red.bold.inverse('No existe la nota a modificar'));
     }
@@ -94,7 +94,7 @@ export class User {
       const index = this.Notes.indexOf(check[1]);
       this.Notes[index].setColor(colorToModify);
       finish = true;
-      console.log(chalk.blue.bold.inverse('Se ha modificado el color de la nota'));
+      console.log(chalk.green.bold.inverse('Se ha modificado el color de la nota'));
     } else {
       console.log(chalk.red.bold.inverse('No existe la nota a modificar'));
     }
@@ -114,7 +114,7 @@ export class User {
       if (index > -1) {
         this.Notes.splice(index, 1);
         finish = true;
-        console.log(chalk.blue.bold.inverse(`Se ha eliminado la nota con titulo ${title}`));
+        console.log(chalk.green.bold.inverse(`Se ha eliminado la nota con titulo ${title}`));
       }
     } else {
       console.log(chalk.red.bold.inverse('Ha introducido mal el titulo o no existe la nota con ese titulo'));

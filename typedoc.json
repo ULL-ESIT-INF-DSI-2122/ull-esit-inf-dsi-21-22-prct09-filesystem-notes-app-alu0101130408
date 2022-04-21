@@ -1,7 +1,10 @@
 {
 	"entryPoints": [
-		"./src/ejercicio1clase.ts",
-        "./src/name_exercice"
+		"../src/index.ts",
+    "../src/Basic_class/note.ts",
+		"../src/Basic_class/user.ts",
+		"../src/system/bdd.ts"
+
 	], 
 	"out": "./docs/typedoc"
 }
