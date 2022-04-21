@@ -87,6 +87,9 @@ export class Note {
       case 'Yellow':
         console.log(chalk.yellow.bold(this.title));
         break;
+      default:
+        console.log(chalk.red.bold(`No se ha encontrado el color`));
+        break;
     }
   }
 
@@ -106,6 +109,9 @@ export class Note {
         break;
       case 'Yellow':
         console.log(chalk.yellow(this.body));
+        break;
+      default:
+        console.log(chalk.red(`No se ha encontrado el color`));
         break;
     }
   }
