@@ -1,6 +1,6 @@
 import 'mocha';
 import {expect} from 'chai';
-import {Note} from '../src/note';
+import {Note} from '../src/models/note';
 
 const firstNote: Note = new Note('Primera Nota', 'Esta es la primera nota', 'Red');
 
