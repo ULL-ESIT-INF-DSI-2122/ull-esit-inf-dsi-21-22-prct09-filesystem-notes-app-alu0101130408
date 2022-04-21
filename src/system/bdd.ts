@@ -3,8 +3,10 @@ const fs = require('fs');
 import {spawn} from 'child_process';
 const FileSync = require('lowdb/adapters/FileSync');
 
-import {Note} from './note';
-
+import {Note} from '../models/note';
+/**
+ * Clase encargada de definir la Base de datos donde se almacenará tanto los usuarios como sus notas.
+ */
 export class Bdd {
   private dataBase: any;
   private fileName: string = '';
@@ -12,6 +14,7 @@ export class Bdd {
   constructor(userName: string, Notes: Note[] = []) {
     if (fs.readdirSync("./src/database").lenght === 0) {
       this.fileName = userName + ".json";
+      // eslint-disable-next-line no-unused-vars
       const touch = spawn('touch', [this.fileName]);
       const adapter = new FileSync(`./src/database/${this.fileName}`);
       this.dataBase = low(adapter);

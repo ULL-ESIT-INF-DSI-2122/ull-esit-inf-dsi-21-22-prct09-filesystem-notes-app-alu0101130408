@@ -6,7 +6,7 @@ import chalk from "chalk";
 export type ColorNotes = 'Red' | 'Green' | 'Blue' | 'Yellow';
 
 /**
- * Clase encargada de definir la estructura de la nota de un usuario en el sistema.
+ * Clase encargada de definir la estructura de una nota de un usuario en el sistema.
  */
 export class Note {
   /**
@@ -70,27 +70,27 @@ export class Note {
   }
 
   /**
-   * Método que analiza el color de la nota y dependiendo del color muestra el título por consola con ese color a través de chark
+   * Método que analiza el color de la nota y dependiendo del color muestra el título por consola con ese color a través del modulo chark
    */
   printTitle(): void {
     switch (this.color) {
       case 'Red':
-        console.log(chalk.red(this.title));
+        console.log(chalk.red.bold(this.title));
         break;
       case 'Green':
-        console.log(chalk.green(this.title));
+        console.log(chalk.green.bold(this.title));
         break;
       case 'Blue':
-        console.log(chalk.blue(this.title));
+        console.log(chalk.blue.bold(this.title));
         break;
       case 'Yellow':
-        console.log(chalk.yellow(this.title));
+        console.log(chalk.yellow.bold(this.title));
         break;
     }
   }
 
   /**
-   * Método que analiza el color de la nota y dependiendo del color muestra la información del cuerpo por consola con ese color a través de chark
+   * Método que analiza el color de la nota y dependiendo del color muestra la información del cuerpo por consola con ese color a través del modulo chark
    */
   printBody(): void {
     switch (this.color) {

@@ -1,0 +1,25 @@
+{
+  "User": [
+    {
+      "name": "Joel",
+      "notes": [
+        {
+          "title": "hola",
+          "body": "esta es una nota flama",
+          "color": "Green"
+        },
+        {
+          "title": "finde",
+          "body": "Ir a la playa",
+          "color": "Blue"
+        },
+        {
+          "title": "tarea",
+          "body": "tarea para el finde",
+          "color": "Red"
+        }
+      ],
+      "id": 381
+    }
+  ]
+}

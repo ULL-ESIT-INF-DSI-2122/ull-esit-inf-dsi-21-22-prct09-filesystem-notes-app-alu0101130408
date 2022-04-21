@@ -1,8 +1,11 @@
 import {Note, ColorNotes} from './note';
-import {Bdd} from './bdd';
+import {Bdd} from '../system/bdd';
 
 const chalk = require('chalk');
 
+/**
+ * Clase encargada de especificar los usuarios y sus operaciones en el sistema.
+ */
 export class User {
   // constructor
   constructor(private userName: string, private Notes: Note[]= [], private DataBase:Bdd = new Bdd(userName, Notes)) {
@@ -53,6 +56,23 @@ export class User {
     }
     return finish;
   }
+
+
+  // Modificar el Color
+  modifyNoteColor(title: string, colorToModify: ColorNotes): boolean {
+    let finish: boolean = false;
+    const check: [boolean, Note] = this.exist(title);
+    if (check[0]) {
+      const index = this.Notes.indexOf(check[1]);
+      this.Notes[index].setColor(colorToModify);
+      finish = true;
+      console.log(chalk.blue.bold('Se ha modificado el color de la nota'));
+    } else {
+      console.log(chalk.red.bold('No existe la nota a modificar'));
+    }
+    return finish;
+  }
+
   // remove
   deleteNote(title: string): boolean {
     let finish: boolean = false;
@@ -71,7 +91,7 @@ export class User {
   }
   // print
   printTitles(): void {
-    console.log("notas de" + this.userName + ":");
+    console.log("notas de " + this.userName + ":");
     this.Notes.forEach((item) => {
       item.printTitle();
     });

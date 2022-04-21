@@ -1,7 +1,7 @@
 import * as yargs from 'yargs';
 
-import {ColorNotes} from './note';
-import {User} from './user';
+import {ColorNotes} from './models/note';
+import {User} from './models/user';
 
 
 function main(): void {
@@ -41,7 +41,39 @@ function main(): void {
       }
     },
   });
-  /*
+
+  yargs.command({
+    command: 'modify',
+    describe: 'Modificar del cuerpo de nota del sistema',
+    builder: {
+      user: {
+        describe: 'Usuario',
+        demandOption: true,
+        type: 'string',
+      },
+      title: {
+        describe: 'Titulo',
+        demandOption: true,
+        type: 'string',
+      },
+      body: {
+        describe: 'Cuerpo',
+        demandOption: true,
+        type: 'string',
+      },
+    },
+    handler(argv) {
+      if (typeof argv.user === 'string' && typeof argv.title === 'string' && typeof argv.body === 'string') {
+        const usuario: User = new User(argv.user);
+
+        if (usuario.modifyNote(argv.title, argv.body)) {
+          usuario.updateUser();
+        }
+      }
+    },
+  });
+
+
   yargs.command({
     command: 'delete',
     describe: 'Elimina una nota del sistema',
@@ -66,6 +98,38 @@ function main(): void {
       }
     },
   });
+
+  yargs.command({
+    command: 'colorModify',
+    describe: 'modificar el color de una nota del sistema',
+    builder: {
+      user: {
+        describe: 'Usuario',
+        demandOption: true,
+        type: 'string',
+      },
+      title: {
+        describe: 'Titulo',
+        demandOption: true,
+        type: 'string',
+      },
+      color: {
+        describe: 'Color',
+        demandOption: true,
+        type: 'string',
+      },
+    },
+    handler(argv) {
+      if (typeof argv.user === 'string' && typeof argv.title === 'string' && typeof argv.color === 'string') {
+        const usuario: User = new User(argv.user);
+        const color: ColorNotes = colorGetter(argv.color);
+        if (usuario.modifyNoteColor(argv.title, color)) {
+          usuario.updateUser();
+        }
+      }
+    },
+  });
+
 
   yargs.command({
     command: 'read',
@@ -107,7 +171,6 @@ function main(): void {
       }
     },
   });
-  */
 
   yargs.parse();
 }
