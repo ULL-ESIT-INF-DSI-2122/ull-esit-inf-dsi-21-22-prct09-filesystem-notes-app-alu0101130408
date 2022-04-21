@@ -3,8 +3,17 @@ import * as yargs from 'yargs';
 import {ColorNotes} from './models/note';
 import {User} from './models/user';
 
-
+/**
+ * Función principal encargada de analizar lo que el usuario pasa a través de yargs y ejecuta una de la operaciones.
+ */
 function main(): void {
+  /**
+   * Añadir Nota: en caso de que se seleccione la opcion add se deberá pasar diversos strings que recogerán usuario, titulo, cuerpo y color de la nota
+   * @param user nombre del usuario al que se añadira esta nota
+   * @param title titulo de la nueva nota que se quiere añadir
+   * @param body Cuerpo que contendra la informacion de la nota
+   * @param color Color de la nueva nota que se añade.
+   */
   yargs.command({
     command: 'add',
     describe: 'Añadir una nueva nota al sistema',
@@ -42,6 +51,13 @@ function main(): void {
     },
   });
 
+  /**
+   * modificar por defecto una Nota: en caso de que se seleccione la opcion modify
+   * se pasaran diversos strings que recogerán usuario, titulo y nuevo cuerpo de la nota
+   * @param user nombre del usuario al que pertenece la nota a modificar
+   * @param title titulo de la nueva nota que se quiere modificar
+   * @param body Nuevo cuerpo que se quiere añadir
+   */
   yargs.command({
     command: 'modify',
     describe: 'Modificar del cuerpo de nota del sistema',
@@ -73,7 +89,12 @@ function main(): void {
     },
   });
 
-
+  /**
+   * Eliminar una Nota: en caso de que se seleccione la opcion delete
+   * se pasaran diversos strings que recogerán usuario y titulo
+   * @param user nombre del usuario al que pertenece la nota a eliminar
+   * @param title titulo de la nota que se quiere eliminar
+   */
   yargs.command({
     command: 'delete',
     describe: 'Elimina una nota del sistema',
@@ -99,9 +120,16 @@ function main(): void {
     },
   });
 
+  /**
+   * Modificar color de una Nota: en caso de que se seleccione la opcion changeColor
+   * se pasaran diversos strings que recogerán usuario, titulo y color.
+   * @param user nombre del usuario al que pertenece la nota a cambiar el color
+   * @param title titulo de la nota que se quiere cambiar el color
+   * @param color nuevo color que se quiere cambiar
+   */
   yargs.command({
-    command: 'colorModify',
-    describe: 'modificar el color de una nota del sistema',
+    command: 'changeColor',
+    describe: 'cambiar el color de una nota del sistema',
     builder: {
       user: {
         describe: 'Usuario',
@@ -130,7 +158,12 @@ function main(): void {
     },
   });
 
-
+  /**
+   * Leer una nota: en caso de que se seleccione la opcion read
+   * se pasaran diversos strings que recogerán usuario y titulo
+   * @param user nombre del usuario al que pertenece la nota que se quiere leer
+   * @param title titulo de la nota que se quiere leer
+   */
   yargs.command({
     command: 'read',
     describe: 'Lee una nota del sistema',
@@ -154,6 +187,11 @@ function main(): void {
     },
   });
 
+  /**
+   * Listar todas las notas de un usuario: en caso de que se seleccione la opcion list
+   * se pasara un string que será el usuario
+   * @param user nombre del usuario al que se quiera listar
+   */
   yargs.command({
     command: 'list',
     describe: 'Lista las notas del usuario',
@@ -175,26 +213,32 @@ function main(): void {
   yargs.parse();
 }
 
-
-function colorGetter(color: string): ColorNotes {
-  let color_: ColorNotes = "Green";
-  switch (color) {
+/**
+ * Función que dado un color en string lo transforma a un color recogido dentro del objeto colorNotes.
+ * @param colorName string con el nombre del color
+ * @returns devuelve el color en formato ColorNotes
+ */
+function colorGetter(colorName: string): ColorNotes {
+  let formatColor: ColorNotes = "Green";
+  switch (colorName) {
     case "Blue":
-      color_ = "Blue";
+      formatColor = "Blue";
       break;
     case "Red":
-      color_ = "Red";
+      formatColor = "Red";
       break;
     case "Yellow":
-      color_ = "Yellow";
+      formatColor = "Yellow";
       break;
     case "Green":
-      color_ = "Green";
+      formatColor = "Green";
       break;
     default:
-      console.log("Color no valido, asigando Verde como predeterminado");
+      console.log("Color no valido, asigado Verde como predeterminado");
       break;
   }
-  return color_;
+  return formatColor;
 }
+
+// Llamada a la función principal
 main();

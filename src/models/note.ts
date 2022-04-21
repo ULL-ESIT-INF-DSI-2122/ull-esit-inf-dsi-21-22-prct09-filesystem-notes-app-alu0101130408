@@ -22,6 +22,31 @@ export class Note {
   }
 
   /**
+   * Método que obtiene el título de una nota
+   * @returns devuelve el título de una nota
+   */
+  geTitle(): string {
+    return this.title;
+  }
+
+  /**
+  * Método que obtiene la informacion del cuerpo de una nota
+  * @returns devuelve la información del cuerpo de una nota
+  */
+  getBody(): string {
+    return this.body;
+  }
+
+  /**
+  * Método que obtiene el color de una nota
+  * @returns devuelve el color de una nota
+  */
+  getColor(): ColorNotes {
+    return this.color;
+  }
+
+
+  /**
    * Método encargado de establecer un nuevo título a la nota
    * @param newTitle string que recibe la función que será el nuevo titulo que se quiere introducir
    */
@@ -43,30 +68,6 @@ export class Note {
    */
   setColor(newColor: ColorNotes): void {
     this.color = newColor;
-  }
-
-  /**
-   * Método que obtiene el título de una nota
-   * @returns devuelve el título de una nota
-   */
-  geTitle(): string {
-    return this.title;
-  }
-
-  /**
-   * Método que obtiene la informacion del cuerpo de una nota
-   * @returns devuelve la información del cuerpo de una nota
-   */
-  getBody(): string {
-    return this.body;
-  }
-
-  /**
-   * Método que obtiene el color de una nota
-   * @returns devuelve el color de una nota
-   */
-  getColor(): ColorNotes {
-    return this.color;
   }
 
   /**
