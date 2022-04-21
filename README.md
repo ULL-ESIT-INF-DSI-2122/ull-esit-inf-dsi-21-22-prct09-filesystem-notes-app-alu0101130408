@@ -24,11 +24,11 @@ Dentro de las acciones recogidas que se debe colocar solo una en [action] están
 
 * `read`: Para leer una nota en concreto de un usuario especifico => los parametros que se deben de poner son : `--user="nombre" --title="titulo de la nota que se desea leer" `.
 
-> Para acceder al informe de la práctica 9 piche [aquí]()
+> Para acceder al informe de la práctica 9 piche [aquí](https://github.com/ULL-ESIT-INF-DSI-2122/ull-esit-inf-dsi-21-22-prct09-filesystem-notes-app-alu0101130408/blob/main/docs/index.md)
 
-> Para acceder al informe a través de Github Pages, pinche [aquí]() u acceda al siguiente enlace:
+> Para acceder al informe a través de Github Pages, pinche [aquí](https://ull-esit-inf-dsi-2122.github.io/ull-esit-inf-dsi-21-22-prct09-filesystem-notes-app-alu0101130408/#id21) u acceda al siguiente enlace: https://ull-esit-inf-dsi-2122.github.io/ull-esit-inf-dsi-21-22-prct09-filesystem-notes-app-alu0101130408/#id21
 > 
-> Si desea acceder a la documentación de Typedoc puede acceder a través de la extensión Live Server.
+> Si desea acceder a la documentación de Typedoc puede acceder a través de la extensión Live Server ejecutando el siguiente [enalce](https://github.com/ULL-ESIT-INF-DSI-2122/ull-esit-inf-dsi-21-22-prct09-filesystem-notes-app-alu0101130408/tree/main/docs/typedoc).
 
 > [Guión de la Práctica 9](https://ull-esit-inf-dsi-2122.github.io/prct09-filesystem-notes-app/) 
 
